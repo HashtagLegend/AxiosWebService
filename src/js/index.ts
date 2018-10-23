@@ -31,7 +31,7 @@ function getCustomers(): void {
   axios.get<ICustomer[]>(uri)
 
       .then(function (response: AxiosResponse<ICustomer[]>): void {
-          let result: string = "<ol>";
+          let result: string = "<ul>";
 
           response.data.forEach((c: ICustomer) => {
 
@@ -39,7 +39,7 @@ function getCustomers(): void {
 
           });
 
-          result += "</ol>";
+          result += "</ul>";
 
           outputElement.innerHTML = result;
 
