@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from "../../node_modules/axios/index";
 
 interface ICustomer{
+  id: number;
   firstName: string;
   lastName: string;
   year: number;
@@ -23,6 +24,9 @@ createCustomerButton.addEventListener("click", createCustomer)
 let deleteCustomerButton: HTMLButtonElement = document.getElementById("deleteCustomer") as HTMLButtonElement
 deleteCustomerButton.addEventListener("click", deleteCustomer)
 
+let updateCustomerButton: HTMLButtonElement = document.getElementById("updateCustomer") as HTMLButtonElement
+updateCustomerButton.addEventListener("click", putCustomer)
+
 /*
 function get()
 {
@@ -44,14 +48,13 @@ function getCustomers(): void {
         let result: string = "<ul>";
 
           response.data.forEach((c: ICustomer) => {            
-             result += "<li>" + c.firstName + " " + c.lastName + "</li>";             
+             result += "<li>" + c.id + " " + c.firstName + " " + c.lastName + "</li>";             
           });
 
           result += "</ul>";
           outputElement.innerHTML = result;
       })
     }
-
 
 function getCustomerById(): void {
     let customerId: HTMLInputElement = document.getElementById("kundeId") as HTMLInputElement
@@ -66,32 +69,47 @@ function getCustomerById(): void {
 
 function createCustomer(): void {
 
-let myFirstNameElm: HTMLInputElement = document.getElementById("firstName") as HTMLInputElement
-let myLastNameElm: HTMLInputElement = document.getElementById("lastName") as HTMLInputElement
-let myYearElm: HTMLInputElement = document.getElementById("year") as HTMLInputElement
-let statusBar: HTMLParagraphElement = document.getElementById("statusBar") as HTMLParagraphElement
+    let myFirstNameElm: HTMLInputElement = document.getElementById("firstName") as HTMLInputElement
+    let myLastNameElm: HTMLInputElement = document.getElementById("lastName") as HTMLInputElement
+    let myYearElm: HTMLInputElement = document.getElementById("year") as HTMLInputElement
 
-let myFirstName: string = myFirstNameElm.value
-let myLastName: string = myLastNameElm.value
-let myYear: number = +myYearElm.value
+    let myFirstName: string = myFirstNameElm.value
+    let myLastName: string = myLastNameElm.value
+    let myYear: number = +myYearElm.value
 
-
-
-axios.post<ICustomer>(uri, {firstName: myFirstName, lastName: myLastName, year: myYear})
+    axios.post<ICustomer>(uri, {firstName: myFirstName, lastName: myLastName, year: myYear})
     .then((response: AxiosResponse) => {console.log(response.status + " " + response.statusText)})
   
-
-  .catch(function(error: AxiosError):void {
-      statusBar.innerHTML = error.message
+    .catch(function(error: AxiosError):void {
+      //statusBar.innerHTML = error.message     
   })
   
-  
-
-
 }
+
 function deleteCustomer(): void {
     let custId: HTMLInputElement = document.getElementById("deleteId") as HTMLInputElement
     let newUri = uri + custId.value
     axios.delete(newUri)
     .then((response: AxiosResponse) => {console.log(response.status + "customer deleted")})
+}
+
+function putCustomer(): void{
+
+    let myIdElm: HTMLInputElement = document.getElementById("id") as HTMLInputElement
+    let myFirstNameElm: HTMLInputElement = document.getElementById("firstNameU") as HTMLInputElement
+    let myLastNameElm: HTMLInputElement = document.getElementById("lastNameU") as HTMLInputElement
+    let myYearElm: HTMLInputElement = document.getElementById("yearU") as HTMLInputElement
+
+    let myFirstName: string = myFirstNameElm.value
+    let myLastName: string = myLastNameElm.value
+    let myYear: number = +myYearElm.value
+
+    let newUri = uri + myIdElm.value
+
+    axios.put<ICustomer>(newUri, {firstName: myFirstName, lastName: myLastName, year: myYear })
+    .then((response: AxiosResponse) => {console.log(response.status + " " + response.statusText)})
+  
+    .catch(function(error: AxiosError):void {
+    })
+
 }
